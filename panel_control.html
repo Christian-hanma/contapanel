@@ -295,6 +295,7 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
     <div class="sft">📅 Estado Actual</div>
     <div class="fr">
       <div class="fg"><label>Último Período Declarado</label><input type="text" id="f-per" placeholder="Ej: Abril 2025"></div>
+      <div class="fg"><label>Fecha Límite Declaración</label><input type="date" id="f-fv" title="Fecha exacta de vencimiento SUNAT"></div>
       <div class="fg"><label>Estado</label><select id="f-est"><option value="pendiente">Pendiente</option><option value="declarado">Declarado</option></select></div>
       <div class="fg"><label>Ventas Último Mes (S/)</label><input type="number" id="f-v" placeholder="0.00" step="0.01"></div>
       <div class="fg"><label>IGV a Pagar (S/)</label><input type="number" id="f-i" placeholder="0.00" step="0.01"></div>
@@ -352,13 +353,13 @@ function actuStats(){const tv=CLIS.reduce((a,c)=>a+c.v,0);const ti=CLIS.reduce((
 
 function filtrar(q){renTabla(CLIS.filter(c=>c.nom.toLowerCase().includes(q.toLowerCase())||c.ruc.includes(q)));}
 
-function limpF(){["f-nom","f-ruc","f-act","f-ema","f-obs","f-per","f-v","f-i"].forEach(id=>el(id).value="");el("f-reg").value="RER";el("f-est").value="pendiente";}
+function limpF(){["f-nom","f-ruc","f-act","f-ema","f-obs","f-per","f-fv","f-v","f-i"].forEach(id=>el(id).value="");el("f-reg").value="RER";el("f-est").value="pendiente";}
 
 function abrirNuevo(){editId=null;el("m-title").textContent="Nuevo Cliente";limpF();el("ov-cli").classList.add("show");}
 
-function editarCli(id){const c=CLIS.find(x=>x.id===id);if(!c)return;editId=id;el("m-title").textContent="Editar Cliente";el("f-nom").value=c.nom;el("f-ruc").value=c.ruc;el("f-reg").value=c.reg;el("f-act").value=c.act||"";el("f-ema").value=c.ema||"";el("f-obs").value=c.obs||"";el("f-per").value=c.per||"";el("f-est").value=c.est||"pendiente";el("f-v").value=c.v||0;el("f-i").value=c.i||0;el("ov-cli").classList.add("show");}
+function editarCli(id){const c=CLIS.find(x=>x.id===id);if(!c)return;editId=id;el("m-title").textContent="Editar Cliente";el("f-nom").value=c.nom;el("f-ruc").value=c.ruc;el("f-reg").value=c.reg;el("f-act").value=c.act||"";el("f-ema").value=c.ema||"";el("f-obs").value=c.obs||"";el("f-per").value=c.per||"";el("f-fv").value=c.fv||"";el("f-est").value=c.est||"pendiente";el("f-v").value=c.v||0;el("f-i").value=c.i||0;el("ov-cli").classList.add("show");}
 
-function guardarCliente(){const nom=(el("f-nom").value||"").trim();const ruc=(el("f-ruc").value||"").trim();if(!nom||!ruc){toast("Nombre y RUC son obligatorios","var(--red)");return;}const d={nom,ruc,reg:el("f-reg").value,act:(el("f-act").value||"").trim(),ema:(el("f-ema").value||"").trim(),obs:(el("f-obs").value||"").trim(),per:(el("f-per").value||"").trim(),est:el("f-est").value,v:parseFloat(el("f-v").value)||0,i:parseFloat(el("f-i").value)||0};if(editId){const idx=CLIS.findIndex(c=>c.id===editId);if(idx>=0){d.id=editId;CLIS[idx]=d;}}else{d.id=slg(nom)||"cli-"+Date.now();if(CLIS.find(c=>c.id===d.id))d.id+="-"+Date.now();CLIS.push(d);}saveClis(CLIS);el("ov-cli").classList.remove("show");renTabla(CLIS);actuStats();toast(editId?"Cliente actualizado ✓":"Cliente agregado ✓");}
+function guardarCliente(){const nom=(el("f-nom").value||"").trim();const ruc=(el("f-ruc").value||"").trim();if(!nom||!ruc){toast("Nombre y RUC son obligatorios","var(--red)");return;}const d={nom,ruc,reg:el("f-reg").value,act:(el("f-act").value||"").trim(),ema:(el("f-ema").value||"").trim(),obs:(el("f-obs").value||"").trim(),per:(el("f-per").value||"").trim(),fv:(el("f-fv").value||""),est:el("f-est").value,v:parseFloat(el("f-v").value)||0,i:parseFloat(el("f-i").value)||0};if(editId){const idx=CLIS.findIndex(c=>c.id===editId);if(idx>=0){d.id=editId;CLIS[idx]=d;}}else{d.id=slg(nom)||"cli-"+Date.now();if(CLIS.find(c=>c.id===d.id))d.id+="-"+Date.now();CLIS.push(d);}saveClis(CLIS);el("ov-cli").classList.remove("show");renTabla(CLIS);actuStats();toast(editId?"Cliente actualizado ✓":"Cliente agregado ✓");}
 
 function eliminarCli(id){if(!confirm("¿Eliminar este cliente? No se puede deshacer."))return;CLIS=CLIS.filter(c=>c.id!==id);saveClis(CLIS);renTabla(CLIS);actuStats();toast("Cliente eliminado","var(--red)");}
 
@@ -368,7 +369,23 @@ function verDash(id){window.open(BASE+"?cliente="+id,"_blank");}
 
 function renRep(){const tb=el("tb-r");tb.innerHTML="";let tv=0,ti=0;CLIS.forEach(c=>{tv+=c.v||0;ti+=c.i||0;const tr=document.createElement("tr");tr.innerHTML=`<td>${c.nom}</td><td style="text-align:left"><span class="tag ${TC[c.reg]||""}">${c.reg}</span></td><td>${c.v>0?"S/ "+fmt(c.v):"—"}</td><td style="color:${c.i>0?"#FF9A9A":"var(--muted)"}">${c.i>0?"S/ "+fmt(c.i):"—"}</td><td>${c.est==="declarado"?"<span style='color:var(--teal)'>✓ Declarado</span>":"<span style='color:var(--gold)'>⏳ Pendiente</span>"}</td>`;tb.appendChild(tr);});el("rp-v").textContent="S/ "+fmt(tv);el("rp-i").textContent="S/ "+fmt(ti);el("ft-v").textContent=tv>0?"S/ "+fmt(tv):"—";el("ft-i").textContent=ti>0?"S/ "+fmt(ti):"—";el("rp-bv").style.width="100%";el("rp-bi").style.width=tv>0?Math.min(ti/tv*100,100)+"%":"0%";}
 
-function renVenc(){const g=el("vg");g.innerHTML="";if(!CLIS.length){g.innerHTML='<div class="empty" style="grid-column:span 3"><div style="font-size:2.5rem;margin-bottom:0.5rem;opacity:0.4">📅</div><div>No hay clientes registrados.</div></div>';return;}const hoy=new Date();CLIS.forEach(c=>{const p=(c.per||"").split(" ");const mi=MES.indexOf(p[0]);const an=parseInt(p[1])||hoy.getFullYear();let dias=null,cls="normal",badge="",vtxt="—";if(mi>=0){const vd=new Date(an,mi+1,20);vtxt=vd.toLocaleDateString("es-PE",{day:"2-digit",month:"short",year:"numeric"});if(c.est==="declarado"){cls="vencido";badge='<span class="vb vv">Declarado</span>';}else{dias=Math.ceil((vd-hoy)/(1000*60*60*24));if(dias<=3){cls="urgente";badge='<span class="vb vu">¡Urgente!</span>';}else if(dias<=7){cls="proximo";badge='<span class="vb vp">Esta semana</span>';}else{cls="normal";badge='<span class="vb vn">A tiempo</span>';}}}const card=document.createElement("div");card.className="vc "+cls;card.innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem">${c.per||"Sin período"}</div><div style="font-weight:600;color:var(--white);font-size:0.85rem;margin-bottom:0.25rem">${c.nom}</div><div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.6rem"><span class="tag ${TC[c.reg]||""}" style="font-size:0.58rem">${c.reg}</span> · PDT 621</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.78rem">📅 ${vtxt} ${badge}</div>${dias!==null&&c.est!=="declarado"?`<div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);margin-top:0.4rem">${dias>0?dias+" días restantes":"¡Vence hoy!"}</div>`:""}  <div style="margin-top:0.85rem"><button class="btn bgh bsm" style="width:100%;justify-content:center" onclick="verDash('${c.id}')">Ver Dashboard →</button></div>`;g.appendChild(card);});}
+function renVenc(){const g=el("vg");g.innerHTML="";if(!CLIS.length){g.innerHTML='<div class="empty" style="grid-column:span 3"><div style="font-size:2.5rem;margin-bottom:0.5rem;opacity:0.4">📅</div><div>No hay clientes registrados.</div></div>';return;}const hoy=new Date();
+// Sort by urgency: pendiente first, then by days remaining
+const sorted=[...CLIS].sort((a,b)=>{if(a.est==="declarado"&&b.est!=="declarado")return 1;if(a.est!=="declarado"&&b.est==="declarado")return -1;return 0;});
+sorted.forEach(c=>{
+  let vd=null;
+  // Use manual date if set, else calculate from period
+  if(c.fv){vd=new Date(c.fv);}
+  else{const p=(c.per||"").split(" ");const mi=MES.indexOf(p[0]);const an=parseInt(p[1])||hoy.getFullYear();if(mi>=0)vd=new Date(an,mi+1,20);}
+  let dias=null,cls="normal",badge="",vtxt="Sin fecha";
+  if(vd){vtxt=vd.toLocaleDateString("es-PE",{day:"2-digit",month:"long",year:"numeric"});
+    if(c.est==="declarado"){cls="vencido";badge='<span class="vb vv">✓ Declarado</span>';}
+    else{dias=Math.ceil((vd-hoy)/(1000*60*60*24));
+      if(dias<0){cls="urgente";badge='<span class="vb vu">¡Vencido!</span>';}
+      else if(dias<=3){cls="urgente";badge='<span class="vb vu">¡Urgente!</span>';}
+      else if(dias<=7){cls="proximo";badge='<span class="vb vp">Esta semana</span>';}
+      else{cls="normal";badge='<span class="vb vn">A tiempo</span>';}}}
+const card=document.createElement("div");card.className="vc "+cls;card.innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem">${c.per||"Sin período"}</div><div style="font-weight:600;color:var(--white);font-size:0.85rem;margin-bottom:0.25rem">${c.nom}</div><div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.6rem"><span class="tag ${TC[c.reg]||""}" style="font-size:0.58rem">${c.reg}</span> · PDT 621</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.78rem">📅 ${vtxt} ${badge}</div>${dias!==null&&c.est!=="declarado"?`<div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);margin-top:0.4rem">${dias>0?dias+" días restantes":"¡Vence hoy!"}</div>`:""}  <div style="margin-top:0.85rem"><button class="btn bgh bsm" style="width:100%;justify-content:center" onclick="verDash('${c.id}')">Ver Dashboard →</button></div>`;g.appendChild(card);});}
 
 function cargarCfg(){el("c-est").value=CFG.est||"";el("c-cnt").value=CFG.cnt||"";el("c-cpc").value=CFG.cpc||"";el("c-ruc").value=CFG.ruc||"";el("c-tel").value=CFG.tel||"";el("c-dir").value=CFG.dir||"";el("c-em").value=CFG.em||"";el("c-col").value=CFG.col||"#F0C040";el("c-igv").value=CFG.igv||18;el("c-ir").value=CFG.ir||29.5;el("c-rer").value=CFG.rer||1.5;el("c-uit").value=CFG.uit||5350;prevColor();}
 
