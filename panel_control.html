@@ -152,6 +152,61 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
 /* PIN badge en tabla */
 .pin-badge{font-family:'JetBrains Mono',monospace;font-size:0.65rem;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);color:var(--purple);padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.1em;}
 @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE MÓVIL ── */
+@media(max-width:768px){
+  aside{
+    position:fixed;bottom:0;left:0;right:0;top:auto;
+    width:100%;height:64px;flex-direction:row;
+    border-right:none;border-top:1px solid var(--border);
+    z-index:200;
+  }
+  .sb-top,.sb-div,.sb-ft{display:none;}
+  nav{
+    display:flex;flex-direction:row;align-items:center;
+    justify-content:space-around;padding:0;flex:1;height:100%;
+  }
+  .nb{
+    flex-direction:column;gap:0.2rem;padding:0.5rem 0.25rem;
+    font-size:0.6rem;border-radius:6px;justify-content:center;
+    align-items:center;min-width:60px;
+  }
+  .nb span:last-child{font-size:0.6rem;}
+  .ni{font-size:1.2rem;width:auto;}
+  main{margin-left:0;margin-bottom:64px;}
+  .pg{padding:1.25rem 1rem 2rem;}
+  .topbar{flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;}
+  .pgt{font-size:1.3rem;}
+  .tra{width:100%;flex-direction:column;align-items:stretch;}
+  .sbox{width:100%;}
+  .btn{justify-content:center;}
+  .sr{grid-template-columns:1fr 1fr;gap:0.75rem;}
+  .sc{padding:1rem;}
+  .sv{font-size:1.4rem;}
+  /* Tabla clientes — scroll horizontal */
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{min-width:700px;}
+  /* Reportes */
+  .rg{grid-template-columns:1fr;}
+  /* Vencimientos */
+  .vg{grid-template-columns:1fr;}
+  /* Config */
+  .cg{grid-template-columns:1fr;}
+  .fr{grid-template-columns:1fr;}
+  /* Modal */
+  .modal{padding:1.25rem;border-radius:12px;}
+  .fr{grid-template-columns:1fr;}
+  /* Toast */
+  .toast{bottom:5rem;right:1rem;left:1rem;font-size:0.78rem;}
+  /* Login */
+  .login-box{padding:2rem 1.5rem;border-radius:16px;}
+}
+
+@media(max-width:400px){
+  .sr{grid-template-columns:1fr;}
+  .nb span:last-child{display:none;}
+  .ni{font-size:1.4rem;}
+}
 </style>
 </head>
 <body>

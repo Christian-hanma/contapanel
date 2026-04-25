@@ -327,6 +327,48 @@ footer{
   header{padding:0 1.25rem;}
   footer{flex-direction:column;gap:0.5rem;padding:1.25rem;}
 }
+
+/* ── RESPONSIVE MÓVIL ── */
+@media(max-width:768px){
+  header{padding:0 1.25rem;}
+  .header-inner{
+    grid-template-columns:1fr;gap:1rem;
+    padding:1.75rem 0 1.25rem;
+  }
+  .header-right{text-align:left;}
+  .header-empresa{font-size:1.2rem;}
+  .container{padding:1.5rem 1.25rem 3rem;}
+  /* KPIs: 2 columnas en móvil */
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:0.75rem;}
+  .kpi-num{font-size:1.3rem;}
+  .kpi-card{padding:1rem 1.1rem;}
+  /* Columnas a 1 en móvil */
+  .two-col{grid-template-columns:1fr;}
+  /* Ratios: 2 columnas */
+  .ratio-grid{grid-template-columns:1fr 1fr;}
+  /* SUNAT */
+  .sunat-grid{grid-template-columns:1fr 1fr;}
+  .sunat-box.wide{grid-column:span 2;}
+  /* Historial — scroll horizontal */
+  .hist-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .hist-table{min-width:600px;}
+  /* Panel padding */
+  .panel{padding:1.25rem;}
+  footer{flex-direction:column;gap:0.5rem;padding:1.25rem;text-align:center;}
+}
+
+@media(max-width:480px){
+  .kpi-grid{grid-template-columns:1fr;}
+  .sunat-grid{grid-template-columns:1fr;}
+  .sunat-box.wide{grid-column:span 1;}
+  .ratio-grid{grid-template-columns:1fr 1fr;}
+  .header-empresa{font-size:1.1rem;}
+}
+
+/* PIN screen responsive */
+@media(max-width:400px){
+  .pk{padding:0.7rem 0.5rem;font-size:1rem;}
+}
 </style>
 </head>
 <body>
