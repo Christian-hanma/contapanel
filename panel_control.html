@@ -3,12 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ContaPanel</title>
+<title>ContaPanel — Acceso</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0A0A0F;--bg2:#12121A;--bg3:#1A1A26;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--gold:#F0C040;--gold2:#FFD970;--teal:#00C9A7;--red:#FF6B6B;--blue:#4EA8DE;--purple:#A78BFA;--muted:#6B7280;--text:#E8E8F0;--white:#FFFFFF;--r:10px;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
+#login-screen.hidden{display:none;}
+.login-box{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:2.5rem 2.25rem;width:min(400px,90vw);text-align:center;}
+.login-logo{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);margin-bottom:0.25rem;}
+.login-sub{font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2rem;}
+.login-icon{font-size:2.5rem;margin-bottom:1.25rem;opacity:0.8;}
+.login-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:0.35rem;}
+.login-desc{font-size:0.8rem;color:var(--muted);margin-bottom:1.75rem;}
+.pwd-wrap{position:relative;margin-bottom:1rem;}
+.pwd-wrap input{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1rem;padding:0.85rem 3rem 0.85rem 1rem;border-radius:10px;outline:none;width:100%;letter-spacing:0.15em;transition:border-color 0.2s;}
+.pwd-wrap input:focus{border-color:rgba(240,192,64,0.5);}
+.pwd-wrap input.error{border-color:var(--red);animation:shake 0.4s ease;}
+.pwd-eye{position:absolute;right:1rem;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted);font-size:1.1rem;user-select:none;}
+.login-btn{width:100%;background:var(--gold);color:var(--bg);font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;padding:0.85rem;border-radius:10px;border:none;cursor:pointer;transition:opacity 0.2s;letter-spacing:0.02em;}
+.login-btn:hover{opacity:0.85;}
+.login-err{color:var(--red);font-size:0.78rem;margin-top:0.75rem;min-height:1.2em;}
+.login-hint{font-size:0.7rem;color:var(--muted);margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);}
+.locked-msg{background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:8px;padding:0.75rem 1rem;font-size:0.78rem;color:var(--red);margin-top:1rem;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* ── SIDEBAR ── */
 aside{position:fixed;top:0;left:0;bottom:0;width:228px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;}
 .sb-top{padding:1.75rem 1.5rem 1.25rem;}
 .logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);}
@@ -24,6 +47,10 @@ nav{padding:1rem;flex:1;}
 .av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;color:var(--bg);flex-shrink:0;}
 .av-nm{font-size:0.78rem;font-weight:600;color:var(--text);}
 .av-rl{font-size:0.65rem;color:var(--muted);}
+.logout-btn{display:flex;align-items:center;gap:0.5rem;margin-top:0.75rem;font-size:0.72rem;color:var(--muted);cursor:pointer;padding:0.4rem 0;transition:color 0.2s;background:none;border:none;font-family:'Epilogue',sans-serif;width:100%;}
+.logout-btn:hover{color:var(--red);}
+
+/* ── MAIN ── */
 main{margin-left:228px;min-height:100vh;}
 .pg{display:none;padding:2.5rem 2.5rem 4rem;animation:fu 0.3s ease both;}
 .pg.active{display:block;}
@@ -69,8 +96,8 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
 .da{background:var(--gold);box-shadow:0 0 6px var(--gold);}
 .mn{font-family:'JetBrains Mono',monospace;font-size:0.77rem;}
 .ac{display:flex;gap:0.4rem;justify-content:flex-end;}
-.sb{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Epilogue',sans-serif;font-size:0.8rem;padding:0.45rem 0.9rem;border-radius:8px;outline:none;width:210px;}
-.sb::placeholder{color:var(--muted);}
+.sbox{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Epilogue',sans-serif;font-size:0.8rem;padding:0.45rem 0.9rem;border-radius:8px;outline:none;width:210px;}
+.sbox::placeholder{color:var(--muted);}
 .panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;margin-bottom:1.25rem;}
 .pt{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;}
 .pt small{font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-weight:400;}
@@ -122,11 +149,32 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--bg3);border:1px solid var(--teal);color:var(--text);font-size:0.8rem;padding:0.75rem 1.25rem;border-radius:8px;display:flex;align-items:center;gap:0.6rem;transform:translateY(80px);opacity:0;transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);z-index:600;}
 .toast.show{transform:translateY(0);opacity:1;}
 .empty{text-align:center;padding:3rem;color:var(--muted);}
+/* PIN badge en tabla */
+.pin-badge{font-family:'JetBrains Mono',monospace;font-size:0.65rem;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);color:var(--purple);padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.1em;}
 @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
 
+<!-- ══ PANTALLA DE LOGIN ══ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">ContaPanel</div>
+    <div class="login-sub">Estudio Contable — Acceso Privado</div>
+    <div class="login-icon">🔐</div>
+    <div class="login-title">Ingresa tu contraseña</div>
+    <div class="login-desc">Solo el contador autorizado puede acceder a este panel</div>
+    <div class="pwd-wrap">
+      <input type="password" id="pwd-input" placeholder="Contraseña" onkeydown="if(event.key==='Enter')verificarPwd()">
+      <span class="pwd-eye" onclick="togglePwd()">👁</span>
+    </div>
+    <button class="login-btn" onclick="verificarPwd()">Entrar →</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-hint" id="login-hint">Primera vez: la contraseña por defecto es <strong>conta2025</strong><br>Cámbiala en Configuración después de entrar.</div>
+  </div>
+</div>
+
+<!-- ══ SIDEBAR ══ -->
 <aside>
   <div class="sb-top">
     <div class="logo">ContaPanel</div>
@@ -144,6 +192,7 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
       <div class="av" id="sb-av">--</div>
       <div><div class="av-nm" id="sb-nm">Contador</div><div class="av-rl">CPC</div></div>
     </div>
+    <button class="logout-btn" onclick="cerrarSesion()">🔒 Cerrar sesión</button>
   </div>
 </aside>
 
@@ -154,7 +203,7 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
   <div class="topbar">
     <div><div class="pgt">Panel de <span>Clientes</span></div><div class="pgs">Gestiona tu cartera y comparte dashboards</div></div>
     <div class="tra">
-      <input class="sb" placeholder="🔍 Buscar cliente..." oninput="filtrar(this.value)">
+      <input class="sbox" placeholder="🔍 Buscar cliente..." oninput="filtrar(this.value)">
       <button class="btn bg" onclick="abrirNuevo()">＋ Nuevo Cliente</button>
     </div>
   </div>
@@ -168,7 +217,7 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
     <table>
       <thead><tr>
         <th>Cliente</th><th>Régimen</th><th>Último Período</th>
-        <th>Estado</th><th>Ventas (mes)</th><th>IGV a Pagar</th>
+        <th>Estado</th><th>Ventas (mes)</th><th>IGV a Pagar</th><th>PIN</th>
         <th style="text-align:right">Acciones</th>
       </tr></thead>
       <tbody id="tb"></tbody>
@@ -207,8 +256,8 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
     <div style="display:flex;gap:2rem;flex-wrap:wrap;font-size:0.78rem;align-items:center">
       <span><span class="dot dv"></span><span style="color:var(--muted)">Al día</span></span>
       <span><span class="dot da"></span><span style="color:var(--muted)">Vence esta semana</span></span>
-      <span><span class="dot" style="background:var(--red);box-shadow:0 0 6px var(--red)"></span><span style="color:var(--muted)">Menos de 3 días</span></span>
-      <span><span class="dot" style="background:var(--muted)"></span><span style="color:var(--muted)">Declarado</span></span>
+      <span><span class="dot" style="background:var(--red);box-shadow:0 0 6px var(--red);display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:0.4rem"></span><span style="color:var(--muted)">Menos de 3 días</span></span>
+      <span><span class="dot" style="background:var(--muted);display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:0.4rem"></span><span style="color:var(--muted)">Declarado</span></span>
     </div>
   </div>
   <div class="vg" id="vg"></div>
@@ -221,7 +270,7 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
     <div>
       <div class="panel">
         <div class="pt">🏢 Datos del Estudio</div>
-        <div class="fg s2"><label>Nombre del Estudio *</label><input type="text" id="c-est" placeholder="Ej: Estudio Contable Quispe & Asoc."></div>
+        <div class="fg"><label>Nombre del Estudio *</label><input type="text" id="c-est" placeholder="Ej: Estudio Contable Quispe & Asoc."></div>
         <div class="fr">
           <div class="fg"><label>Nombre del Contador *</label><input type="text" id="c-cnt" placeholder="Nombres y Apellidos"></div>
           <div class="fg"><label>N° de CPC</label><input type="text" id="c-cpc" placeholder="Ej: 12345"></div>
@@ -235,7 +284,27 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
           <button class="btn bg bsm" onclick="guardarCfg()">💾 Guardar</button>
         </div>
       </div>
+
+      <!-- CAMBIAR CONTRASEÑA MAESTRA -->
+      <div class="panel" style="border-color:rgba(167,139,250,0.25)">
+        <div class="pt" style="color:var(--purple)">🔐 Contraseña Maestra del Panel</div>
+        <div class="fg"><label>Contraseña Actual</label>
+          <div class="pwd-wrap" style="margin-bottom:0"><input type="password" id="pwd-actual" placeholder="Contraseña actual"><span class="pwd-eye" onclick="toggleField('pwd-actual')">👁</span></div>
+        </div>
+        <div class="fr">
+          <div class="fg"><label>Nueva Contraseña</label>
+            <div class="pwd-wrap" style="margin-bottom:0"><input type="password" id="pwd-nueva" placeholder="Mínimo 6 caracteres"><span class="pwd-eye" onclick="toggleField('pwd-nueva')">👁</span></div>
+          </div>
+          <div class="fg"><label>Confirmar Nueva</label>
+            <div class="pwd-wrap" style="margin-bottom:0"><input type="password" id="pwd-conf" placeholder="Repite la contraseña"><span class="pwd-eye" onclick="toggleField('pwd-conf')">👁</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1rem">
+          <button class="btn bg bsm" onclick="cambiarPwd()">🔐 Cambiar Contraseña</button>
+        </div>
+      </div>
     </div>
+
     <div>
       <div class="panel" style="margin-bottom:1.25rem">
         <div class="pt">🎨 Apariencia</div>
@@ -268,7 +337,6 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
     </div>
   </div>
 </div>
-
 </main>
 
 <!-- MODAL CLIENTE -->
@@ -281,24 +349,25 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
     <div class="fr">
       <div class="fg"><label>RUC / DNI *</label><input type="text" id="f-ruc" placeholder="20XXXXXXXXX" maxlength="11"></div>
       <div class="fg"><label>Régimen Tributario *</label>
-        <select id="f-reg">
-          <option value="NRUS">Nuevo RUS (NRUS)</option>
-          <option value="RER">Régimen Especial (RER)</option>
-          <option value="RMT">Régimen MYPE Tributario (RMT)</option>
-          <option value="RG">Régimen General (RG)</option>
-        </select>
+        <select id="f-reg"><option value="NRUS">Nuevo RUS (NRUS)</option><option value="RER">Régimen Especial (RER)</option><option value="RMT">Régimen MYPE Tributario (RMT)</option><option value="RG">Régimen General (RG)</option></select>
       </div>
       <div class="fg"><label>Actividad Económica</label><input type="text" id="f-act" placeholder="Ej: Comercio al por menor"></div>
       <div class="fg"><label>Correo del Cliente</label><input type="email" id="f-ema" placeholder="cliente@correo.com"></div>
     </div>
     <div class="fg"><label>Observaciones internas</label><textarea id="f-obs" placeholder="Notas sobre el cliente..."></textarea></div>
+    <div class="sft">🔑 Seguridad del Dashboard</div>
+    <div class="fr">
+      <div class="fg"><label>PIN del Cliente (4-6 dígitos) *</label><input type="text" id="f-pin" placeholder="Ej: 1234" maxlength="6" pattern="[0-9]*" inputmode="numeric"></div>
+      <div class="fg"><label style="color:var(--muted);font-size:0.65rem">Este PIN lo ingresará el cliente para ver su dashboard. Puedes usar su RUC, fecha de nacimiento, etc.</label></div>
+    </div>
     <div class="sft">📅 Estado Actual</div>
     <div class="fr">
       <div class="fg"><label>Último Período Declarado</label><input type="text" id="f-per" placeholder="Ej: Abril 2025"></div>
-      <div class="fg"><label>Fecha Límite Declaración</label><input type="date" id="f-fv" title="Fecha exacta de vencimiento SUNAT"></div>
+      <div class="fg"><label>Fecha Límite Declaración</label><input type="date" id="f-fv"></div>
       <div class="fg"><label>Estado</label><select id="f-est"><option value="pendiente">Pendiente</option><option value="declarado">Declarado</option></select></div>
       <div class="fg"><label>Ventas Último Mes (S/)</label><input type="number" id="f-v" placeholder="0.00" step="0.01"></div>
       <div class="fg"><label>IGV a Pagar (S/)</label><input type="number" id="f-i" placeholder="0.00" step="0.01"></div>
+      <div class="fg"><label>IR Mensual (S/)</label><input type="number" id="f-ir" placeholder="0.00" step="0.01"></div>
     </div>
     <div class="mb" style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
       <button class="btn bgh" onclick="document.getElementById('ov-cli').classList.remove('show')">Cancelar</button>
@@ -311,8 +380,12 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
 <div class="overlay" id="ov-lnk" onclick="if(event.target===this)this.classList.remove('show')">
   <div class="modal" style="max-width:480px">
     <div class="mt" id="ml-t">Link del Cliente</div>
-    <div class="ms" id="ml-s">Comparte este link con tu cliente.</div>
+    <div class="ms" id="ml-s">Comparte este link. El cliente deberá ingresar su PIN para acceder.</div>
     <div class="lb" id="ml-l">—</div>
+    <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:8px;padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.78rem;color:var(--purple)">
+      🔑 PIN del cliente: <strong id="ml-pin" style="font-family:'JetBrains Mono',monospace;letter-spacing:0.15em">—</strong>
+      <span style="color:var(--muted);font-size:0.7rem;display:block;margin-top:0.25rem">Comparte el PIN por separado, nunca junto al link</span>
+    </div>
     <div class="mb">
       <button class="btn bg" style="flex:1" onclick="copiarLink()">📋 Copiar Link</button>
       <button class="btn bgh" onclick="document.getElementById('ov-lnk').classList.remove('show')">Cerrar</button>
@@ -324,81 +397,271 @@ td{padding:0.9rem 1.1rem;font-size:0.82rem;vertical-align:middle;}
 <div class="toast" id="toast"><span style="color:var(--teal)">✓</span><span id="tm">OK</span></div>
 
 <script>
+// ═══════════════════════════════════════════════════
+// CONSTANTES
+// ═══════════════════════════════════════════════════
 const BASE="https://christian-hanma.github.io/contapanel/dashboard_cliente.html";
 const MES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre"];
 const COL={RER:"#F0C040",RMT:"#00C9A7",RG:"#4EA8DE",NRUS:"#FF6B6B"};
 const TC={RER:"tr",RMT:"tm",RG:"tg",NRUS:"tn"};
+const PWD_KEY="cp_pwd";
+const DEFAULT_PWD="conta2025";
+const MAX_INTENTOS=5;
+const BLOQUEO_MIN=15;
+
 const el=id=>document.getElementById(id);
 const fmt=n=>(n||0).toLocaleString("es-PE",{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtK=n=>n>=1000?(n/1000).toFixed(0)+"K":fmt(n);
 const ini=s=>s.split(" ").slice(0,2).map(w=>w[0]||"").join("").toUpperCase();
 const slg=s=>s.toLowerCase().replace(/[áàä]/g,"a").replace(/[éèë]/g,"e").replace(/[íìï]/g,"i").replace(/[óòö]/g,"o").replace(/[úùü]/g,"u").replace(/ñ/g,"n").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 
+// ═══════════════════════════════════════════════════
+// SEGURIDAD — LOGIN
+// ═══════════════════════════════════════════════════
+function getPwd(){return localStorage.getItem(PWD_KEY)||DEFAULT_PWD;}
+function getIntentos(){try{return JSON.parse(sessionStorage.getItem("cp_int")||'{"n":0,"ts":0}');}catch(e){return{n:0,ts:0};}}
+function setIntentos(obj){sessionStorage.setItem("cp_int",JSON.stringify(obj));}
+
+function verificarSesion(){
+  // Si ya está autenticado en esta sesión, mostrar panel
+  if(sessionStorage.getItem("cp_auth")==="1"){
+    el("login-screen").classList.add("hidden");
+    return true;
+  }
+  return false;
+}
+
+function verificarPwd(){
+  const intentos=getIntentos();
+  const ahora=Date.now();
+
+  // Verificar bloqueo
+  if(intentos.n>=MAX_INTENTOS){
+    const tiempoBloqueo=BLOQUEO_MIN*60*1000;
+    const restante=Math.ceil((intentos.ts+tiempoBloqueo-ahora)/60000);
+    if(ahora<intentos.ts+tiempoBloqueo){
+      el("login-err").textContent=`Panel bloqueado. Intenta en ${restante} minuto(s).`;
+      return;
+    }else{
+      setIntentos({n:0,ts:0});
+    }
+  }
+
+  const pwd=el("pwd-input").value;
+  if(pwd===getPwd()){
+    sessionStorage.setItem("cp_auth","1");
+    setIntentos({n:0,ts:0});
+    el("login-screen").classList.add("hidden");
+    el("login-err").textContent="";
+  }else{
+    const nuevos={n:intentos.n+1,ts:ahora};
+    setIntentos(nuevos);
+    el("pwd-input").classList.add("error");
+    setTimeout(()=>el("pwd-input").classList.remove("error"),500);
+    const restantes=MAX_INTENTOS-nuevos.n;
+    if(restantes>0){
+      el("login-err").textContent=`Contraseña incorrecta. ${restantes} intento(s) restante(s).`;
+    }else{
+      el("login-err").textContent=`Panel bloqueado por ${BLOQUEO_MIN} minutos.`;
+    }
+    el("pwd-input").value="";
+  }
+}
+
+function cerrarSesion(){
+  if(confirm("¿Cerrar sesión?")){
+    sessionStorage.removeItem("cp_auth");
+    location.reload();
+  }
+}
+
+function togglePwd(){
+  const i=el("pwd-input");
+  i.type=i.type==="password"?"text":"password";
+}
+function toggleField(id){
+  const i=el(id);
+  i.type=i.type==="password"?"text":"password";
+}
+
+function cambiarPwd(){
+  const actual=el("pwd-actual").value;
+  const nueva=el("pwd-nueva").value;
+  const conf=el("pwd-conf").value;
+  if(actual!==getPwd()){toast("Contraseña actual incorrecta","var(--red)");return;}
+  if(nueva.length<6){toast("La nueva contraseña debe tener al menos 6 caracteres","var(--red)");return;}
+  if(nueva!==conf){toast("Las contraseñas no coinciden","var(--red)");return;}
+  localStorage.setItem(PWD_KEY,nueva);
+  el("pwd-actual").value="";el("pwd-nueva").value="";el("pwd-conf").value="";
+  // Ocultar hint de contraseña por defecto
+  el("login-hint").style.display="none";
+  toast("Contraseña cambiada correctamente ✓");
+}
+
+// ═══════════════════════════════════════════════════
+// STORAGE CLIENTES / CONFIG
+// ═══════════════════════════════════════════════════
 function leerCfg(){const d={est:"Mi Estudio Contable",cnt:"CPC Nombre Apellido",cpc:"",ruc:"",tel:"",dir:"",em:"",col:"#F0C040",igv:18,ir:29.5,rer:1.5,uit:5350};try{return{...d,...JSON.parse(localStorage.getItem("cp_cfg")||"{}")}}catch(e){return d}}
 function saveCfg(c){localStorage.setItem("cp_cfg",JSON.stringify(c));}
-function leerClis(){try{const c=JSON.parse(localStorage.getItem("cp_clis")||"null");if(c)return c;}catch(e){}return[{id:"ferreteria-don-pepe",nom:"Ferretería Don Pepe E.I.R.L.",ruc:"20601234567",reg:"RER",act:"Comercio ferretero",ema:"",obs:"",per:"Abril 2025",est:"declarado",v:45800,i:3150},{id:"bodega-hermanos-silva",nom:"Bodega Hermanos Silva",ruc:"10456789012",reg:"NRUS",act:"Bodega",ema:"",obs:"",per:"Abril 2025",est:"declarado",v:28400,i:0},{id:"consultora-norte-sac",nom:"Consultora Norte S.A.C.",ruc:"20712345678",reg:"RMT",act:"Consultoría",ema:"",obs:"",per:"Abril 2025",est:"declarado",v:38200,i:3006},{id:"textileria-flores",nom:"Textilería Flores & Hijos S.A.C.",ruc:"20823456789",reg:"RG",act:"Textilería",ema:"",obs:"",per:"Marzo 2025",est:"pendiente",v:0,i:0}];}
+function leerClis(){
+  try{const c=JSON.parse(localStorage.getItem("cp_clis")||"null");if(c)return c;}catch(e){}
+  return[
+    {id:"ferreteria-don-pepe",nom:"Ferretería Don Pepe E.I.R.L.",ruc:"20601234567",reg:"RER",act:"Comercio ferretero",ema:"",obs:"",pin:"1234",per:"Abril 2025",fv:"",est:"declarado",v:45800,i:3150,ir:687},
+    {id:"bodega-hermanos-silva",nom:"Bodega Hermanos Silva",ruc:"10456789012",reg:"NRUS",act:"Bodega",ema:"",obs:"",pin:"5678",per:"Abril 2025",fv:"",est:"declarado",v:28400,i:0,ir:0},
+    {id:"consultora-norte-sac",nom:"Consultora Norte S.A.C.",ruc:"20712345678",reg:"RMT",act:"Consultoría",ema:"",obs:"",pin:"9012",per:"Abril 2025",fv:"",est:"declarado",v:38200,i:3006,ir:382},
+    {id:"textileria-flores",nom:"Textilería Flores & Hijos S.A.C.",ruc:"20823456789",reg:"RG",act:"Textilería",ema:"",obs:"",pin:"3456",per:"Marzo 2025",fv:"",est:"pendiente",v:0,i:0,ir:0},
+  ];
+}
 function saveClis(l){localStorage.setItem("cp_clis",JSON.stringify(l));}
 
 let CFG=leerCfg(),CLIS=leerClis(),editId=null,linkAct="";
 
+// ═══════════════════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════════════════
 function toast(msg,col){el("tm").textContent=msg;el("toast").style.borderColor=col||"var(--teal)";el("toast").classList.add("show");setTimeout(()=>el("toast").classList.remove("show"),3000);}
-
 function ir(pg,btn){document.querySelectorAll(".pg").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nb").forEach(b=>b.classList.remove("active"));el("pg-"+pg).classList.add("active");if(btn)btn.classList.add("active");if(pg==="reportes")renRep();if(pg==="vencimientos")renVenc();if(pg==="config")cargarCfg();}
-
 function actuSB(){el("sb-nm").textContent=CFG.cnt;el("sb-av").textContent=ini(CFG.cnt.replace(/^CPC\s*/i,""));const s=CFG.est;el("sb-sub").textContent=s.length>24?s.slice(0,22)+"…":s;}
 
-function renTabla(lista){const tb=el("tb");tb.innerHTML="";if(!lista.length){tb.innerHTML='<tr><td colspan="7"><div class="empty"><div style="font-size:2.5rem;margin-bottom:0.5rem;opacity:0.4">👥</div><div>No hay clientes. Haz clic en "+ Nuevo Cliente".</div></div></td></tr>';return;}lista.forEach(c=>{const color=COL[c.reg]||"#8A8A8A";const est=c.est==="declarado"?`<span><span class="dot dv"></span>Declarado</span>`:`<span><span class="dot da"></span>Pendiente</span>`;const tr=document.createElement("tr");tr.innerHTML=`<td><div style="display:flex;align-items:center;gap:0.75rem"><div class="ca" style="background:${color}22;color:${color}">${ini(c.nom)}</div><div><div class="cn">${c.nom}</div><div class="cr">${c.ruc}</div></div></div></td><td><span class="tag ${TC[c.reg]||""}">${c.reg}</span></td><td><span class="mn" style="font-size:0.75rem">${c.per||"—"}</span></td><td style="font-size:0.78rem">${est}</td><td><span class="mn">${c.v>0?"S/ "+fmt(c.v):"—"}</span></td><td><span class="mn" style="color:${c.i>0?"#FF9A9A":"var(--muted)"}">${c.i>0?"S/ "+fmt(c.i):"—"}</span></td><td><div class="ac"><button class="btn bt bsm" onclick="abrirLink('${c.id}','${c.nom.replace(/'/g,"\\'")}')">🔗 Link</button><button class="btn bgh bsm" onclick="verDash('${c.id}')">Ver →</button><button class="btn bgh bsm" style="color:var(--purple);border-color:rgba(167,139,250,0.3)" onclick="editarCli('${c.id}')">✏️</button><button class="btn bd bsm" onclick="eliminarCli('${c.id}')">🗑</button></div></td>`;el("tb").appendChild(tr);});}
+// ═══════════════════════════════════════════════════
+// TABLA CLIENTES
+// ═══════════════════════════════════════════════════
+function renTabla(lista){
+  const tb=el("tb");tb.innerHTML="";
+  if(!lista.length){tb.innerHTML='<tr><td colspan="8"><div class="empty"><div style="font-size:2.5rem;margin-bottom:0.5rem;opacity:0.4">👥</div><div>No hay clientes. Haz clic en "+ Nuevo Cliente".</div></div></td></tr>';return;}
+  lista.forEach(c=>{
+    const color=COL[c.reg]||"#8A8A8A";
+    const est=c.est==="declarado"?`<span><span class="dot dv"></span>Declarado</span>`:`<span><span class="dot da"></span>Pendiente</span>`;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td><div style="display:flex;align-items:center;gap:0.75rem">
+        <div class="ca" style="background:${color}22;color:${color}">${ini(c.nom)}</div>
+        <div><div class="cn">${c.nom}</div><div class="cr">${c.ruc}</div></div>
+      </div></td>
+      <td><span class="tag ${TC[c.reg]||""}">${c.reg}</span></td>
+      <td><span class="mn" style="font-size:0.75rem">${c.per||"—"}</span></td>
+      <td style="font-size:0.78rem">${est}</td>
+      <td><span class="mn">${c.v>0?"S/ "+fmt(c.v):"—"}</span></td>
+      <td><span class="mn" style="color:${c.i>0?"#FF9A9A":"var(--muted)"}">${c.i>0?"S/ "+fmt(c.i):"—"}</span></td>
+      <td><span class="pin-badge">${c.pin||"—"}</span></td>
+      <td><div class="ac">
+        <button class="btn bt bsm" onclick="abrirLink('${c.id}','${c.nom.replace(/'/g,"\\'")}')">🔗 Link</button>
+        <button class="btn bgh bsm" onclick="verDash('${c.id}')">Ver →</button>
+        <button class="btn bgh bsm" style="color:var(--purple);border-color:rgba(167,139,250,0.3)" onclick="editarCli('${c.id}')">✏️</button>
+        <button class="btn bd bsm" onclick="eliminarCli('${c.id}')">🗑</button>
+      </div></td>`;
+    tb.appendChild(tr);
+  });
+}
 
 function actuStats(){const tv=CLIS.reduce((a,c)=>a+c.v,0);const ti=CLIS.reduce((a,c)=>a+c.i,0);el("st-t").textContent=CLIS.length;el("st-d").textContent=CLIS.filter(c=>c.est==="declarado").length;el("st-v").textContent="S/ "+fmtK(tv);el("st-i").textContent="S/ "+fmtK(ti);}
-
 function filtrar(q){renTabla(CLIS.filter(c=>c.nom.toLowerCase().includes(q.toLowerCase())||c.ruc.includes(q)));}
 
-function limpF(){["f-nom","f-ruc","f-act","f-ema","f-obs","f-per","f-fv","f-v","f-i"].forEach(id=>el(id).value="");el("f-reg").value="RER";el("f-est").value="pendiente";}
-
+// ═══════════════════════════════════════════════════
+// MODAL CLIENTE
+// ═══════════════════════════════════════════════════
+function limpF(){["f-nom","f-ruc","f-act","f-ema","f-obs","f-pin","f-per","f-fv","f-v","f-i","f-ir"].forEach(id=>el(id).value="");el("f-reg").value="RER";el("f-est").value="pendiente";}
 function abrirNuevo(){editId=null;el("m-title").textContent="Nuevo Cliente";limpF();el("ov-cli").classList.add("show");}
+function editarCli(id){
+  const c=CLIS.find(x=>x.id===id);if(!c)return;
+  editId=id;el("m-title").textContent="Editar Cliente";
+  el("f-nom").value=c.nom;el("f-ruc").value=c.ruc;el("f-reg").value=c.reg;
+  el("f-act").value=c.act||"";el("f-ema").value=c.ema||"";el("f-obs").value=c.obs||"";
+  el("f-pin").value=c.pin||"";el("f-per").value=c.per||"";el("f-fv").value=c.fv||"";
+  el("f-est").value=c.est||"pendiente";el("f-v").value=c.v||0;el("f-i").value=c.i||0;el("f-ir").value=c.ir||0;
+  el("ov-cli").classList.add("show");
+}
+function guardarCliente(){
+  const nom=(el("f-nom").value||"").trim();
+  const ruc=(el("f-ruc").value||"").trim();
+  const pin=(el("f-pin").value||"").trim();
+  if(!nom||!ruc){toast("Nombre y RUC son obligatorios","var(--red)");return;}
+  if(!pin||pin.length<4){toast("El PIN debe tener al menos 4 dígitos","var(--red)");return;}
+  if(!/^\d+$/.test(pin)){toast("El PIN solo puede contener números","var(--red)");return;}
+  const d={nom,ruc,reg:el("f-reg").value,act:(el("f-act").value||"").trim(),ema:(el("f-ema").value||"").trim(),obs:(el("f-obs").value||"").trim(),pin,per:(el("f-per").value||"").trim(),fv:(el("f-fv").value||""),est:el("f-est").value,v:parseFloat(el("f-v").value)||0,i:parseFloat(el("f-i").value)||0,ir:parseFloat(el("f-ir").value)||0};
+  if(editId){const idx=CLIS.findIndex(c=>c.id===editId);if(idx>=0){d.id=editId;CLIS[idx]=d;}}
+  else{d.id=slg(nom)||"cli-"+Date.now();if(CLIS.find(c=>c.id===d.id))d.id+="-"+Date.now();CLIS.push(d);}
+  saveClis(CLIS);el("ov-cli").classList.remove("show");renTabla(CLIS);actuStats();
+  toast(editId?"Cliente actualizado ✓":"Cliente agregado ✓");
+}
+function eliminarCli(id){if(!confirm("¿Eliminar este cliente?"))return;CLIS=CLIS.filter(c=>c.id!==id);saveClis(CLIS);renTabla(CLIS);actuStats();toast("Cliente eliminado","var(--red)");}
 
-function editarCli(id){const c=CLIS.find(x=>x.id===id);if(!c)return;editId=id;el("m-title").textContent="Editar Cliente";el("f-nom").value=c.nom;el("f-ruc").value=c.ruc;el("f-reg").value=c.reg;el("f-act").value=c.act||"";el("f-ema").value=c.ema||"";el("f-obs").value=c.obs||"";el("f-per").value=c.per||"";el("f-fv").value=c.fv||"";el("f-est").value=c.est||"pendiente";el("f-v").value=c.v||0;el("f-i").value=c.i||0;el("ov-cli").classList.add("show");}
-
-function guardarCliente(){const nom=(el("f-nom").value||"").trim();const ruc=(el("f-ruc").value||"").trim();if(!nom||!ruc){toast("Nombre y RUC son obligatorios","var(--red)");return;}const d={nom,ruc,reg:el("f-reg").value,act:(el("f-act").value||"").trim(),ema:(el("f-ema").value||"").trim(),obs:(el("f-obs").value||"").trim(),per:(el("f-per").value||"").trim(),fv:(el("f-fv").value||""),est:el("f-est").value,v:parseFloat(el("f-v").value)||0,i:parseFloat(el("f-i").value)||0};if(editId){const idx=CLIS.findIndex(c=>c.id===editId);if(idx>=0){d.id=editId;CLIS[idx]=d;}}else{d.id=slg(nom)||"cli-"+Date.now();if(CLIS.find(c=>c.id===d.id))d.id+="-"+Date.now();CLIS.push(d);}saveClis(CLIS);el("ov-cli").classList.remove("show");renTabla(CLIS);actuStats();toast(editId?"Cliente actualizado ✓":"Cliente agregado ✓");}
-
-function eliminarCli(id){if(!confirm("¿Eliminar este cliente? No se puede deshacer."))return;CLIS=CLIS.filter(c=>c.id!==id);saveClis(CLIS);renTabla(CLIS);actuStats();toast("Cliente eliminado","var(--red)");}
-
-function abrirLink(id,nom){linkAct=BASE+"?cliente="+id;el("ml-t").textContent=nom;el("ml-s").textContent="Link único de "+nom.split(" ")[0]+". Compártelo por WhatsApp o correo.";el("ml-l").textContent=linkAct;el("ov-lnk").classList.add("show");}
+// ═══════════════════════════════════════════════════
+// LINKS
+// ═══════════════════════════════════════════════════
+function abrirLink(id,nom){
+  const c=CLIS.find(x=>x.id===id);
+  linkAct=BASE+"?cliente="+id;
+  el("ml-t").textContent=nom;
+  el("ml-s").textContent="Comparte el link con "+nom.split(" ")[0]+". El cliente necesitará su PIN para entrar.";
+  el("ml-l").textContent=linkAct;
+  el("ml-pin").textContent=c?c.pin:"—";
+  el("ov-lnk").classList.add("show");
+}
 function copiarLink(){navigator.clipboard.writeText(linkAct).then(()=>{el("ov-lnk").classList.remove("show");toast("Link copiado ✓");});}
 function verDash(id){window.open(BASE+"?cliente="+id,"_blank");}
 
+// ═══════════════════════════════════════════════════
+// REPORTES
+// ═══════════════════════════════════════════════════
 function renRep(){const tb=el("tb-r");tb.innerHTML="";let tv=0,ti=0;CLIS.forEach(c=>{tv+=c.v||0;ti+=c.i||0;const tr=document.createElement("tr");tr.innerHTML=`<td>${c.nom}</td><td style="text-align:left"><span class="tag ${TC[c.reg]||""}">${c.reg}</span></td><td>${c.v>0?"S/ "+fmt(c.v):"—"}</td><td style="color:${c.i>0?"#FF9A9A":"var(--muted)"}">${c.i>0?"S/ "+fmt(c.i):"—"}</td><td>${c.est==="declarado"?"<span style='color:var(--teal)'>✓ Declarado</span>":"<span style='color:var(--gold)'>⏳ Pendiente</span>"}</td>`;tb.appendChild(tr);});el("rp-v").textContent="S/ "+fmt(tv);el("rp-i").textContent="S/ "+fmt(ti);el("ft-v").textContent=tv>0?"S/ "+fmt(tv):"—";el("ft-i").textContent=ti>0?"S/ "+fmt(ti):"—";el("rp-bv").style.width="100%";el("rp-bi").style.width=tv>0?Math.min(ti/tv*100,100)+"%":"0%";}
 
-function renVenc(){const g=el("vg");g.innerHTML="";if(!CLIS.length){g.innerHTML='<div class="empty" style="grid-column:span 3"><div style="font-size:2.5rem;margin-bottom:0.5rem;opacity:0.4">📅</div><div>No hay clientes registrados.</div></div>';return;}const hoy=new Date();
-// Sort by urgency: pendiente first, then by days remaining
-const sorted=[...CLIS].sort((a,b)=>{if(a.est==="declarado"&&b.est!=="declarado")return 1;if(a.est!=="declarado"&&b.est==="declarado")return -1;return 0;});
-sorted.forEach(c=>{
-  let vd=null;
-  // Use manual date if set, else calculate from period
-  if(c.fv){vd=new Date(c.fv);}
-  else{const p=(c.per||"").split(" ");const mi=MES.indexOf(p[0]);const an=parseInt(p[1])||hoy.getFullYear();if(mi>=0)vd=new Date(an,mi+1,20);}
-  let dias=null,cls="normal",badge="",vtxt="Sin fecha";
-  if(vd){vtxt=vd.toLocaleDateString("es-PE",{day:"2-digit",month:"long",year:"numeric"});
-    if(c.est==="declarado"){cls="vencido";badge='<span class="vb vv">✓ Declarado</span>';}
-    else{dias=Math.ceil((vd-hoy)/(1000*60*60*24));
-      if(dias<0){cls="urgente";badge='<span class="vb vu">¡Vencido!</span>';}
-      else if(dias<=3){cls="urgente";badge='<span class="vb vu">¡Urgente!</span>';}
-      else if(dias<=7){cls="proximo";badge='<span class="vb vp">Esta semana</span>';}
-      else{cls="normal";badge='<span class="vb vn">A tiempo</span>';}}}
-const card=document.createElement("div");card.className="vc "+cls;card.innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem">${c.per||"Sin período"}</div><div style="font-weight:600;color:var(--white);font-size:0.85rem;margin-bottom:0.25rem">${c.nom}</div><div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.6rem"><span class="tag ${TC[c.reg]||""}" style="font-size:0.58rem">${c.reg}</span> · PDT 621</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.78rem">📅 ${vtxt} ${badge}</div>${dias!==null&&c.est!=="declarado"?`<div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);margin-top:0.4rem">${dias>0?dias+" días restantes":"¡Vence hoy!"}</div>`:""}  <div style="margin-top:0.85rem"><button class="btn bgh bsm" style="width:100%;justify-content:center" onclick="verDash('${c.id}')">Ver Dashboard →</button></div>`;g.appendChild(card);});}
+// ═══════════════════════════════════════════════════
+// VENCIMIENTOS
+// ═══════════════════════════════════════════════════
+function renVenc(){
+  const g=el("vg");g.innerHTML="";
+  if(!CLIS.length){g.innerHTML='<div class="empty" style="grid-column:span 3"><div style="font-size:2.5rem;margin-bottom:0.5rem;opacity:0.4">📅</div><div>No hay clientes registrados.</div></div>';return;}
+  const hoy=new Date();
+  const sorted=[...CLIS].sort((a,b)=>{if(a.est==="declarado"&&b.est!=="declarado")return 1;if(a.est!=="declarado"&&b.est==="declarado")return -1;return 0;});
+  sorted.forEach(c=>{
+    let vd=null;
+    if(c.fv){vd=new Date(c.fv+"T00:00:00");}
+    else{const p=(c.per||"").split(" ");const mi=MES.indexOf(p[0]);const an=parseInt(p[1])||hoy.getFullYear();if(mi>=0)vd=new Date(an,mi+1,20);}
+    let dias=null,cls="normal",badge="",vtxt="Sin fecha";
+    if(vd){
+      vtxt=vd.toLocaleDateString("es-PE",{day:"2-digit",month:"long",year:"numeric"});
+      if(c.est==="declarado"){cls="vencido";badge='<span class="vb vv">✓ Declarado</span>';}
+      else{
+        dias=Math.ceil((vd-hoy)/(1000*60*60*24));
+        if(dias<0){cls="urgente";badge='<span class="vb vu">⚠ Vencido</span>';}
+        else if(dias<=3){cls="urgente";badge='<span class="vb vu">¡Urgente!</span>';}
+        else if(dias<=7){cls="proximo";badge='<span class="vb vp">Esta semana</span>';}
+        else{cls="normal";badge='<span class="vb vn">A tiempo</span>';}
+      }
+    }
+    const card=document.createElement("div");
+    card.className="vc "+cls;
+    card.innerHTML=`
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem">${c.per||"Sin período"}</div>
+      <div style="font-weight:600;color:var(--white);font-size:0.85rem;margin-bottom:0.25rem">${c.nom}</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.6rem"><span class="tag ${TC[c.reg]||""}" style="font-size:0.58rem">${c.reg}</span> · PDT 621</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.78rem">📅 ${vtxt} ${badge}</div>
+      ${dias!==null&&c.est!=="declarado"?`<div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);margin-top:0.4rem">${dias>0?dias+" días restantes":"¡Vence hoy!"}</div>`:""}
+      <div style="margin-top:0.85rem"><button class="btn bgh bsm" style="width:100%;justify-content:center" onclick="verDash('${c.id}')">Ver Dashboard →</button></div>`;
+    g.appendChild(card);
+  });
+}
 
+// ═══════════════════════════════════════════════════
+// CONFIGURACIÓN
+// ═══════════════════════════════════════════════════
 function cargarCfg(){el("c-est").value=CFG.est||"";el("c-cnt").value=CFG.cnt||"";el("c-cpc").value=CFG.cpc||"";el("c-ruc").value=CFG.ruc||"";el("c-tel").value=CFG.tel||"";el("c-dir").value=CFG.dir||"";el("c-em").value=CFG.em||"";el("c-col").value=CFG.col||"#F0C040";el("c-igv").value=CFG.igv||18;el("c-ir").value=CFG.ir||29.5;el("c-rer").value=CFG.rer||1.5;el("c-uit").value=CFG.uit||5350;prevColor();}
-
 function prevColor(){const n=el("c-est").value||"Mi Estudio Contable";const c=el("c-col").value||"#F0C040";el("pv-nm").textContent=n;el("pv-nm").style.color=c;}
-
 el("c-est").addEventListener("input",prevColor);
-
 function guardarCfg(){CFG={est:(el("c-est").value||"").trim()||CFG.est,cnt:(el("c-cnt").value||"").trim()||CFG.cnt,cpc:(el("c-cpc").value||"").trim(),ruc:(el("c-ruc").value||"").trim(),tel:(el("c-tel").value||"").trim(),dir:(el("c-dir").value||"").trim(),em:(el("c-em").value||"").trim(),col:el("c-col").value,igv:parseFloat(el("c-igv").value)||18,ir:parseFloat(el("c-ir").value)||29.5,rer:parseFloat(el("c-rer").value)||1.5,uit:parseFloat(el("c-uit").value)||5350};saveCfg(CFG);actuSB();toast("Configuración guardada ✓");}
-
 function exportar(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({config:CFG,clientes:CLIS},null,2)],{type:"application/json"}));a.download="contapanel_backup_"+new Date().toISOString().slice(0,10)+".json";a.click();toast("Backup exportado ✓");}
+function resetTodo(){localStorage.removeItem("cp_cfg");localStorage.removeItem("cp_clis");localStorage.removeItem(PWD_KEY);toast("Eliminado. Recargando...","var(--red)");setTimeout(()=>location.reload(),1500);}
 
-function resetTodo(){localStorage.removeItem("cp_cfg");localStorage.removeItem("cp_clis");toast("Eliminado. Recargando...","var(--red)");setTimeout(()=>location.reload(),1500);}
-
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+// Verificar si ya tiene sesión activa
+verificarSesion();
+// Enter en login
+el("pwd-input").addEventListener("keydown",e=>{if(e.key==="Enter")verificarPwd();});
+// Ocultar hint si ya cambió la contraseña
+if(localStorage.getItem(PWD_KEY)){el("login-hint").style.display="none";}
 actuSB();renTabla(CLIS);actuStats();
 </script>
 </body>
